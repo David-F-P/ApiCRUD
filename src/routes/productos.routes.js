@@ -4,6 +4,7 @@ import {
     getProductById,
     createProductWithRelations,
     updateProductWithRelations,
+    deleteProduct, 
 } from "../controllers/productos.controllers.js";
 
 const productosRouter = Router();

@@ -63,6 +63,9 @@ export const createProductWithRelations = async (req, res) => {
 
         const producto = rows[0];
 
+
+        
+
         // Insertar relaciones con órdenes de compra
         if (ordenes_de_compra) {
             ordenes_de_compra.forEach(async (orden) => {
@@ -98,6 +101,23 @@ export const createProductWithRelations = async (req, res) => {
         client.release();
     }
 };
+
+// Eliminar un producto
+export const deleteProduct = async (req, res) => {
+    try {
+        const id_producto = parseInt(req.params.id_producto);
+        const { rowCount } = await pool.query("DELETE FROM productos WHERE id_producto = $1", [id_producto]);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        res.sendStatus(204); // Devolvemos un estado 204 (sin contenido) cuando se elimina correctamente.
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 // Actualizar un producto y sus relaciones con órdenes de compra y almacenes
 export const updateProductWithRelations = async (req, res) => {

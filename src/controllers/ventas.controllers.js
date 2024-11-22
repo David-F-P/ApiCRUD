@@ -109,6 +109,23 @@ export const createSale = async (req, res) => {
     }
 };
 
+// Eliminar una venta
+export const deleteSale = async (req, res) => {
+    try {
+        const id_venta = parseInt(req.params.id_venta);
+        const { rowCount } = await pool.query("DELETE FROM ventas WHERE id_venta = $1", [id_venta]);
+
+        if (rowCount === 0) {
+            return res.status(404).json({ message: "Sale not found" });
+        }
+
+        res.sendStatus(204); // Devolvemos un estado 204 (sin contenido) cuando se elimina correctamente.
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 // Actualizar una venta y sus productos relacionados
 export const updateSale = async (req, res) => {
     const client = await pool.connect();
