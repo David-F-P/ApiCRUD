@@ -12,11 +12,11 @@ import { PORT } from "./config.js";
 const app = express();
 
 // Middleware de logging
-app.use(morgan("dev"));
+//app.use(morgan("dev"));
 
 // Middleware para parsear JSON y formularios
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+//app.use(express.json());
+//pp.use(express.urlencoded({ extended: false }));
 
 // Rutas
 app.use("/api/almacen", almacenRoutes);
