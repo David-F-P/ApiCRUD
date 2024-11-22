@@ -2,17 +2,18 @@ import { Router } from "express";
 import {
     getProducts,
     getProductById,
-    createProduct,
-    updateProduct,
-    deleteProduct,
+    createProductWithRelations,
+    updateProductWithRelations,
 } from "../controllers/productos.controllers.js";
 
-const router = Router();
+const productosRouter = Router();
 
-router.get("/productos", getProducts);
-router.get("/productos/:id", getProductById);
-router.post("/productos", createProduct);
-router.put("/productos/:id", updateProduct);
-router.delete("/productos/:id", deleteProduct);
+// Rutas para gestionar productos
+productosRouter.get("/productos", getProducts);                           // Obtener todos los productos
+productosRouter.get("/productos/:id_producto", getProductById);          // Obtener un producto por ID
+productosRouter.post("/productos", createProductWithRelations);          // Crear un nuevo producto con relaciones
+productosRouter.put("/productos/:id_producto", updateProductWithRelations); // Actualizar un producto con relaciones
+productosRouter.delete("/productos/:id_producto", deleteProduct);       // Eliminar un producto
 
-export default router;
+export default productosRouter;
+

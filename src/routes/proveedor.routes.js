@@ -1,18 +1,20 @@
 import { Router } from "express";
 import {
-    getProviders,
-    getProviderById,
-    createProvider,
-    updateProvider,
-    deleteProvider,
+    getSuppliers,
+    getSupplierById,
+    createSupplier,
+    updateSupplier,
+    deleteSupplier,
 } from "../controllers/proveedor.controllers.js";
 
-const proveedorRoutes = Router();
+const proveedorRouter = Router();
 
-proveedorRoutes.get("/proveedor", getProviders);
-proveedorRoutes.get("/proveedor/:id", getProviderById);
-proveedorRoutes.post("/proveedor", createProvider);
-proveedorRoutes.put("/proveedor/:id", updateProvider);
-proveedorRoutes.delete("/proveedor/:id", deleteProvider);
+// Rutas para gestionar proveedores
+proveedorRouter.get("/proveedor", getSuppliers);                               // Obtener todos los proveedores
+proveedorRouter.get("/proveedor/:id_proveedor", getSupplierById);              // Obtener un proveedor por ID
+proveedorRouter.post("/proveedor", createSupplier);                            // Crear un nuevo proveedor
+proveedorRouter.put("/proveedor/:id_proveedor", updateSupplier);              // Actualizar un proveedor
+proveedorRouter.delete("/proveedor/:id_proveedor", deleteSupplier);           // Eliminar un proveedor
 
-export default proveedorRoutes;
+export default proveedorRouter;
+

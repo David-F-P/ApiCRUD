@@ -1,50 +1,84 @@
 import { pool } from "../db.js";
 
-export const getProviders = async (req, res) => {
-  const response = await pool.query("SELECT * FROM proveedor ORDER BY id_proveedor ASC");
-res.status(200).json(response.rows);
+// Obtener todos los proveedores
+export const getSuppliers = async (req, res) => {
+    try {
+        const response = await pool.query("SELECT * FROM proveedor ORDER BY id_proveedor ASC");
+        res.status(200).json(response.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
-export const getProviderById = async (req, res) => {
-const id_proveedor = parseInt(req.params.id_proveedor);
-  const response = await pool.query("SELECT * FROM proveedor WHERE id_proveedor = $1", [id_proveedor]);
-res.json(response.rows);
+// Obtener un proveedor por ID
+export const getSupplierById = async (req, res) => {
+    try {
+        const id_proveedor = parseInt(req.params.id_proveedor);
+        const response = await pool.query("SELECT * FROM proveedor WHERE id_proveedor = $1", [id_proveedor]);
+
+        if (response.rows.length === 0) {
+            return res.status(404).json({ message: "Supplier not found" });
+        }
+
+        res.json(response.rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
-export const createProvider = async (req, res) => {
-try {
-    const { nombre, apellido_paterno, apellido_materno, calle, municipio, estado, cp, telefono } = req.body;
+// Crear un nuevo proveedor
+export const createSupplier = async (req, res) => {
+    try {
+        const { nombre, apellidos, rfc, telefono, email, calle, colonia, cp, municipio, estado } = req.body;
 
-    const { rows } = await pool.query(
-      "INSERT INTO proveedor (nombre, apellido_paterno, apellido_materno, calle, municipio, estado, cp, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-    [nombre, apellido_paterno, apellido_materno, calle, municipio, estado, cp, telefono]
-    );
+        const { rows } = await pool.query(
+            `INSERT INTO proveedor (nombre, apellidos, rfc, telefono, email, calle, colonia, cp, municipio, estado) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+            [nombre, apellidos, rfc, telefono, email, calle, colonia, cp, municipio, estado]
+        );
 
-    res.status(201).json(rows[0]);
-} catch (error) {
-    return res.status(500).json({ error: error.message });
-}
+        res.status(201).json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
-export const updateProvider = async (req, res) => {
-const id_proveedor = parseInt(req.params.id_proveedor);
-const { nombre, apellido_paterno, apellido_materno, calle, municipio, estado, cp, telefono } = req.body;
+// Actualizar un proveedor
+export const updateSupplier = async (req, res) => {
+    try {
+        const id_proveedor = parseInt(req.params.id_proveedor);
+        const { nombre, apellidos, rfc, telefono, email, calle, colonia, cp, municipio, estado } = req.body;
 
-const { rows } = await pool.query(
-    "UPDATE proveedor SET nombre = $1, apellido_paterno = $2, apellido_materno = $3, calle = $4, municipio = $5, estado = $6, cp = $7, telefono = $8 WHERE id_proveedor = $9 RETURNING *",
-    [nombre, apellido_paterno, apellido_materno, calle, municipio, estado, cp, telefono, id_proveedor]
-);
+        const { rows } = await pool.query(
+            `UPDATE proveedor 
+            SET nombre = $1, apellidos = $2, rfc = $3, telefono = $4, email = $5, calle = $6, colonia = $7, cp = $8, municipio = $9, estado = $10 
+             WHERE id_proveedor = $11 RETURNING *`,
+            [nombre, apellidos, rfc, telefono, email, calle, colonia, cp, municipio, estado, id_proveedor]
+        );
 
-return res.json(rows[0]);
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "Supplier not found" });
+        }
+
+        res.json(rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
-export const deleteProvider = async (req, res) => {
-const id_proveedor = parseInt(req.params.id_proveedor);
-const { rowCount } = await pool.query("DELETE FROM proveedor WHERE id_proveedor = $1", [id_proveedor]);
+// Eliminar un proveedor
+export const deleteSupplier = async (req, res) => {
+    try {
+        const id_proveedor = parseInt(req.params.id_proveedor);
+        const { rowCount } = await pool.query("DELETE FROM proveedor WHERE id_proveedor = $1", [id_proveedor]);
 
-if (rowCount === 0) {
-    return res.status(404).json({ message: "Provider not found" });
-}
+        if (rowCount === 0) {
+            return res.status(404).json({ message: "Supplier not found" });
+        }
 
-return res.sendStatus(204);
+        res.sendStatus(204);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
+
